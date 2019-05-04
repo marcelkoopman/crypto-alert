@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +23,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         window?.rootViewController =
             UINavigationController(rootViewController: coinController)
+        
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+            if granted {
+                center.removeAllPendingNotificationRequests()
+                let content = UNMutableNotificationContent()
+                content.title = "BTC price change"
+                content.body = "The early bird catches the worm, but the second mouse gets the cheese."
+                content.categoryIdentifier = "alarm"
+                content.userInfo = ["customData": "fizzbuzz"]
+                content.sound = UNNotificationSound.default
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                center.add(request)
+            }
+        }
         return true
     }
 

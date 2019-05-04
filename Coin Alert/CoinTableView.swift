@@ -22,7 +22,7 @@ class CoinTableView: UIViewController, UITableViewDataSource, UITableViewDelegat
             cell.backgroundColor = UIColor(white: 1, alpha: 0.5)
             cell.textLabel?.text = coin.name + "/EUR €" + String(format:"%.2f",currentPrice) + " @ " + coin.timeStamp
         } else {
-            let diff = lastPrice - currentPrice
+            let diff = currentPrice - lastPrice
             if (diff > 0) {
                 cell.backgroundColor = UIColor.green
                 cell.textLabel?.text = coin.name + "/EUR €" + String(format:"%.2f",currentPrice) + " @ " + coin.timeStamp + " ↑ " + String(diff)
@@ -35,7 +35,7 @@ class CoinTableView: UIViewController, UITableViewDataSource, UITableViewDelegat
             }
         }
         lastPrice = currentPrice
-        cell.accessoryType = .detailDisclosureButton
+        cell.accessoryType = .detailButton
         cell.textLabel?.textColor = UIColor.black
         return cell
     }
@@ -45,7 +45,20 @@ class CoinTableView: UIViewController, UITableViewDataSource, UITableViewDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getPrices()
+        let timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+        timer.fire()
+        
+    }
+    
+    @objc
+    func runTimedCode() {
+        DispatchQueue.global(qos: .background).async {
+            self.getPrices()
+            DispatchQueue.main.async {
+                print("Reload view")
+                self.myTableView.reloadData()
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -92,9 +105,6 @@ class CoinTableView: UIViewController, UITableViewDataSource, UITableViewDelegat
                 return
             } else if let coin = coin {
                 self.itemsToLoad[index] = coin
-                DispatchQueue.main.async{
-                    self.myTableView.reloadData()
-                }
             }
         }
     }
@@ -108,9 +118,6 @@ class CoinTableView: UIViewController, UITableViewDataSource, UITableViewDelegat
                 return
             } else if let coin = coin {
                 self.itemsToLoad.append(coin)
-                DispatchQueue.main.async{
-                    self.myTableView.reloadData()
-                }
             }
         }
     }
@@ -120,8 +127,9 @@ class CoinTableView: UIViewController, UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        print("Update cell "+String(indexPath.row))
         self.updatePrices(index: indexPath.row)
         tableView.reloadData()
     }
+    
+    
 }
