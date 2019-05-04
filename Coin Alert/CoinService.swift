@@ -9,6 +9,5 @@
 import Foundation
 
 protocol CoinService {
-    func getEuroPrice(
-        completionHandler: @escaping (Coin?, Error?) -> Void)
+    func getEuroPrice(completionHandler: @escaping (Coin?, Error?) -> Void)
 }

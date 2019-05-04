@@ -9,45 +9,62 @@
 import UIKit
 
 class CoinTableView: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
+    
     var bitcoinService = BitcoinService()
+    let cellId = "Cell"
+    var lastPrice:Double = 0
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath as IndexPath)
-        
-        cell.textLabel?.text = self.itemsToLoad[indexPath.row]
-        cell.backgroundColor = UIColor(white: 1, alpha: 0.5)
+        let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath as IndexPath)
+        let coin = self.itemsToLoad[indexPath.row]
+        let currentPrice = coin.euroPrice
+        if (lastPrice == Double(0)) {
+            cell.backgroundColor = UIColor(white: 1, alpha: 0.5)
+            cell.textLabel?.text = coin.name + "/EUR €" + String(format:"%.2f",currentPrice) + " @ " + coin.timeStamp
+        } else {
+            let diff = lastPrice - currentPrice
+            if (diff > 0) {
+                cell.backgroundColor = UIColor.green
+                cell.textLabel?.text = coin.name + "/EUR €" + String(format:"%.2f",currentPrice) + " @ " + coin.timeStamp + " ↑ " + String(diff)
+            } else if (diff < 0){
+                cell.backgroundColor = UIColor.red
+                cell.textLabel?.text = coin.name + "/EUR €" + String(format:"%.2f",currentPrice) + " @ " + coin.timeStamp + " ↓ " + String(diff)
+            } else {
+                cell.backgroundColor = UIColor.blue
+                cell.textLabel?.text = coin.name + "/EUR €" + String(format:"%.2f",currentPrice) + " @ " + coin.timeStamp
+            }
+        }
+        lastPrice = currentPrice
+        cell.accessoryType = .detailDisclosureButton
         cell.textLabel?.textColor = UIColor.black
         return cell
     }
     
     var myTableView: UITableView = UITableView()
-    var itemsToLoad: [String] = []
+    var itemsToLoad: [Coin] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        getPrices()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        print("Memory warning")
+        itemsToLoad = []
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Get main screen bounds
         let screenSize: CGRect = UIScreen.main.bounds
-        
         let screenWidth = screenSize.width
         let screenHeight = screenSize.height
         
         myTableView.frame = CGRect(x:0, y:0, width:screenWidth, height:screenHeight)
         myTableView.dataSource = self
         myTableView.delegate = self
-        
-        myTableView.register(UITableViewCell.self, forCellReuseIdentifier: "myCell")
+        myTableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         
         let background = #imageLiteral(resourceName: "Image")
         var imageView : UIImageView!
@@ -58,33 +75,53 @@ class CoinTableView: UIViewController, UITableViewDataSource, UITableViewDelegat
         imageView.center = myTableView.center
         myTableView.backgroundView = imageView
         myTableView.tableFooterView = UIView(frame: CGRect.zero)
-        self.view.addSubview(myTableView)
         
-        self.populateTable()
+        self.view.addSubview(myTableView)
     }
     
     func populateTable() {
-        self.updatePrices()
         myTableView.reloadData()
     }
     
-    private func updatePrices() {
+    func updatePrices(index: Int) {
         bitcoinService.getEuroPrice() {
             (coin, error) in
             if error != nil {
                 //deal with error
-                print(error.debugDescription)
+                print("ERROR: "+error.debugDescription)
                 return
             } else if let coin = coin {
-                let name = coin.name
-                let price = coin.euroPrice
-                self.itemsToLoad.append(name + "/EUR €" + String(format:"%.2f",price))
+                self.itemsToLoad[index] = coin
+                DispatchQueue.main.async{
+                    self.myTableView.reloadData()
+                }
             }
         }
     }
     
+    func getPrices() {
+        bitcoinService.getEuroPrice() {
+            (coin, error) in
+            if error != nil {
+                //deal with error
+                print("ERROR: "+error.debugDescription)
+                return
+            } else if let coin = coin {
+                self.itemsToLoad.append(coin)
+                DispatchQueue.main.async{
+                    self.myTableView.reloadData()
+                }
+            }
+        }
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemsToLoad.count
+    }
+    
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        print("Update cell "+String(indexPath.row))
+        self.updatePrices(index: indexPath.row)
+        tableView.reloadData()
     }
 }

@@ -7,17 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1F20AD57227D793500DFA527 /* CoinTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F20AD56227D793500DFA527 /* CoinTableViewCell.swift */; };
 		1F20AD59227D7C8D00DFA527 /* CoinTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F20AD58227D7C8D00DFA527 /* CoinTableView.swift */; };
 		1F75691E227CBF2700573C4D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F75691D227CBF2700573C4D /* AppDelegate.swift */; };
 		1F756925227CBF2800573C4D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F756924227CBF2800573C4D /* Assets.xcassets */; };
 		1F756932227CC5AD00573C4D /* CoinService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F756931227CC5AD00573C4D /* CoinService.swift */; };
 		1F756934227CC5FF00573C4D /* BitcoinService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F756933227CC5FF00573C4D /* BitcoinService.swift */; };
 		1F756936227CC9BD00573C4D /* Coin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F756935227CC9BD00573C4D /* Coin.swift */; };
+		1FC6721B227D92C10037D21A /* BitcoinPriceIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC6721A227D92C10037D21A /* BitcoinPriceIndex.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1F20AD56227D793500DFA527 /* CoinTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinTableViewCell.swift; sourceTree = "<group>"; };
 		1F20AD58227D7C8D00DFA527 /* CoinTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinTableView.swift; sourceTree = "<group>"; };
 		1F75691A227CBF2700573C4D /* Coin Alert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Coin Alert.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F75691D227CBF2700573C4D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -26,6 +25,7 @@
 		1F756931227CC5AD00573C4D /* CoinService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinService.swift; sourceTree = "<group>"; };
 		1F756933227CC5FF00573C4D /* BitcoinService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinService.swift; sourceTree = "<group>"; };
 		1F756935227CC9BD00573C4D /* Coin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coin.swift; sourceTree = "<group>"; };
+		1FC6721A227D92C10037D21A /* BitcoinPriceIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinPriceIndex.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,8 +64,8 @@
 				1F756931227CC5AD00573C4D /* CoinService.swift */,
 				1F756933227CC5FF00573C4D /* BitcoinService.swift */,
 				1F756935227CC9BD00573C4D /* Coin.swift */,
-				1F20AD56227D793500DFA527 /* CoinTableViewCell.swift */,
 				1F20AD58227D7C8D00DFA527 /* CoinTableView.swift */,
+				1FC6721A227D92C10037D21A /* BitcoinPriceIndex.swift */,
 			);
 			path = "Coin Alert";
 			sourceTree = "<group>";
@@ -140,11 +140,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F20AD59227D7C8D00DFA527 /* CoinTableView.swift in Sources */,
-				1F20AD57227D793500DFA527 /* CoinTableViewCell.swift in Sources */,
 				1F756934227CC5FF00573C4D /* BitcoinService.swift in Sources */,
 				1F756932227CC5AD00573C4D /* CoinService.swift in Sources */,
 				1F756936227CC9BD00573C4D /* Coin.swift in Sources */,
 				1F75691E227CBF2700573C4D /* AppDelegate.swift in Sources */,
+				1FC6721B227D92C10037D21A /* BitcoinPriceIndex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

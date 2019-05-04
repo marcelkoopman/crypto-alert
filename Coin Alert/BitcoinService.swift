@@ -10,7 +10,7 @@ import Foundation
 
 class BitcoinService: NSObject, URLSessionDelegate, CoinService {
     
-    let euroPriceUrl = "https://min-api.cryptocompare.com/data/price"
+    let coinDeskUrl = "https://api.coindesk.com/v1/bpi/currentprice/EUR.json"
     
     lazy var session: URLSession = {
         let configuration = URLSessionConfiguration.default
@@ -18,21 +18,10 @@ class BitcoinService: NSObject, URLSessionDelegate, CoinService {
     }()
     
     func getEuroPrice(completionHandler: @escaping (Coin?, Error?) -> Void) {
-        
-        guard var components = URLComponents(string: euroPriceUrl) else {return}
-        components.queryItems = [
-            URLQueryItem(name: "fsym", value: "BTC"),
-            URLQueryItem(name: "tsyms", value: "EUR")
-        ]
-        
-        guard let url = components.url else {return}
-        //generate request
-        let request = URLRequest(url: url)
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let error=error {
-                completionHandler(nil, error)
-            }
+        let url = URL(string: coinDeskUrl)!
+        let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
             guard let data = data else { return }
+            //print(String(data: data, encoding: .utf8)!)
             self.parseJSON(data: data, completionHandler: completionHandler)
         }
         task.resume()
@@ -40,13 +29,19 @@ class BitcoinService: NSObject, URLSessionDelegate, CoinService {
     
     private func parseJSON(data:Data, completionHandler: @escaping (Coin?, Error?) -> Void) {
         do {
-            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] {
-                if let price = (json["EUR"] as? Double) {
-                   let coin = Coin(name: "BTC", euroPrice: price)
-                   completionHandler(coin,nil)
-                }
+            let bpi = try JSONDecoder().decode(BitcoinPriceIndex.self, from: data)
+            let formatter = NumberFormatter()
+            formatter.locale = Locale(identifier: "en_US")
+            formatter.numberStyle = .decimal
+            if let rate = formatter.number(from: bpi.bpi.EUR.rate) {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "HH:mm:ss"
+                let currentDateTime = Date()
+                let timeStamp = formatter.string(from: currentDateTime)
+                let coin = Coin(name: "BTC", euroPrice: rate.doubleValue, timeStamp: timeStamp)
+                completionHandler(coin, nil)
             } else {
-                completionHandler(nil, nil)
+                print(bpi.bpi.EUR.rate)
             }
         } catch let error as NSError {
             completionHandler(nil, error)

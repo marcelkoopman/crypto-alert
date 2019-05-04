@@ -11,9 +11,11 @@ import Foundation
 struct Coin {
     var name:String
     var euroPrice:Double
+    var timeStamp:String
     
-    init(name:String, euroPrice:Double) {
+    init(name:String, euroPrice:Double, timeStamp:String) {
         self.name = name
         self.euroPrice = euroPrice
+        self.timeStamp = timeStamp
     }
 }

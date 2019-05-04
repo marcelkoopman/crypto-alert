@@ -9,5 +9,14 @@
 import Foundation
 
 class BitcoinPriceIndex: Codable {
-    
+    var bpi:Bpi
+}
+
+struct Bpi: Codable {
+    var EUR:EUR
+}
+
+struct EUR: Codable {
+    var code:String
+    var rate:String
 }
