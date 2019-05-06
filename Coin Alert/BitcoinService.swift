@@ -39,6 +39,7 @@ class BitcoinService: NSObject, URLSessionDelegate, CoinService {
                 let currentDateTime = Date()
                 let timeStamp = formatter.string(from: currentDateTime)
                 let coin = Coin(name: "BTC", euroPrice: rate.doubleValue, timeStamp: timeStamp)
+                print("Price of coin " + String(coin.euroPrice))
                 completionHandler(coin, nil)
             } else {
                 print(bpi.bpi.EUR.rate)
